@@ -17,6 +17,9 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        serif: ['Baskervville SC', 'serif'],  // Add Baskervville SC as a serif font
+      },
       colors: {
         customGray: "#f8f9fa",
         customText: "#6e7b93",

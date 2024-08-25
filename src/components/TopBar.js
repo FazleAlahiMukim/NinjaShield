@@ -7,7 +7,7 @@ export default function () {
 
   return (
     <div className="flex h-20 flex-row items-center justify-between bg-customGray">
-      <div className="flex flex-row relative left-10 items-end">
+      <div className="flex flex-row relative left-5 items-end">
         <span className="text-xl uppercase">
           {user?.organization || "Organization"}
         </span>
