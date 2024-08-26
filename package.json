@@ -22,7 +22,8 @@
     "react-dom": "^18",
     "react-switch": "^7.0.0",
     "tailwind-merge": "^2.3.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "eslint": "^8",

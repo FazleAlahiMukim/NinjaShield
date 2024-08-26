@@ -1,29 +1,100 @@
+import React, { useState } from "react";
+import { useUser } from "@/context/UserContext";
+import { v4 as uuidv4 } from "uuid";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
+  DialogClose,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import {
-  InformationCircleIcon
-} from "@heroicons/react/24/outline";
+import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import Rule from "./Rule";
 
-export default function ({ dataClass }) {
+export default function Classification({ dataClass }) {
+  const { user } = useUser();
+  const [rules, setRules] = useState([]);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+
+  const handleSaveRule = (newRule, prevRule) => {
+    if (prevRule) {
+      setRules((prevRules) =>
+        prevRules.map((rule) =>
+          rule.id === prevRule.id ? { ...newRule, id: prevRule.id } : rule,
+        ),
+      );
+      return;
+    }
+    newRule.id = uuidv4();
+    setRules((prevRules) => [...prevRules, newRule]);
+  };
+
+  const handleSaveClassification = async () => {
+    const ruleTransformed = rules.map((rule) => {
+      return {
+        name: rule.name,
+        occurrences: rule.occurrences,
+        elements: rule.elements.map((element) => {
+          return {
+            type: element.data.type,
+            text: element.data.text,
+          };
+        }),
+      };
+    });
+    const dataClassAndRules = {
+      userId: user.userId,
+      isActive: true,
+      name,
+      description,
+      events: 0,
+      lastUpdated: new Date(),
+      rules: ruleTransformed,
+    };
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/data-class/save`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `${user.token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataClassAndRules),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to save data classification");
+      }
+    } catch (error) {
+      console.error("Error saving classification:", error);
+    }
+  };
+
+  const handleCancel = () => {
+    setName("");
+    setDescription("");
+    setRules([]);
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="relative right-5">
-          Add Classification
-        </Button>
+        <Button className="relative right-5">Add Classification</Button>
       </DialogTrigger>
       <DialogContent className="w-full text-sm">
         <DialogHeader>
           <DialogTitle>Data Classification</DialogTitle>
+          <DialogDescription>
+            Create a new data classification to identify sensitive data.
+          </DialogDescription>
         </DialogHeader>
         <div>
           <div className="mb-4 flex space-x-4">
@@ -37,6 +108,8 @@ export default function ({ dataClass }) {
               <input
                 type="text"
                 id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="w-full border-b-2 border-gray-300 transition duration-300 ease-in-out focus:border-blue-500 focus:outline-none"
               />
             </div>
@@ -50,6 +123,8 @@ export default function ({ dataClass }) {
               <input
                 type="text"
                 id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 className="w-full border-b-2 border-gray-300 transition duration-300 ease-in-out focus:border-blue-500 focus:outline-none"
               />
             </div>
@@ -59,13 +134,28 @@ export default function ({ dataClass }) {
             This data classification will be applied to files that match{" "}
             <span className="font-extrabold">any</span> of the rules below.
           </div>
+          <div className="m-2 flex flex-col p-2 font-serif text-base">
+            {rules.map((rule, index) => (
+              <div
+                key={index}
+                className="mb-2 flex flex-row items-center justify-between text-gray-800"
+              >
+                {rule.name}
+                <Rule rule={rule} onSaveRule={handleSaveRule} />
+              </div>
+            ))}
+          </div>
           <div className="py-3">
-            <Rule />
+            <Rule onSaveRule={handleSaveRule} />
           </div>
         </div>
         <DialogFooter>
-          <Button>Save</Button>
-          <Button>Cancel</Button>
+          <DialogClose>
+            <Button onClick={handleSaveClassification}>Save</Button>
+          </DialogClose>
+          <DialogClose>
+            <Button onClick={handleCancel}>Cancel</Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>
