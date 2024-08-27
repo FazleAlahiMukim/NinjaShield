@@ -4,7 +4,6 @@ import { useUser } from "@/context/UserContext";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableFooter,
   TableHead,
@@ -13,42 +12,20 @@ import {
 } from "@/components/ui/table";
 import Switch from "@/components/Switch";
 import Classification from "./Classification";
+import api from "@/lib/api";
 
 export default function page() {
-  const { user, setUser } = useUser();
+  const { user } = useUser();
   const [dataClasses, setDataClasses] = useState([]);
-
-  useEffect(() => {
-    // Set the userId and token for development purposes
-    setUser((prevUser) => ({
-      ...prevUser,
-      userId: "66bd0fcf05f286017428eaef",
-      token:
-        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2NmJkMGZjZjA1ZjI4NjAxNzQyOGVhZWYiLCJpYXQiOjE3MjQzMTM1MjR9.HnXX1HKKtoTOVdjhLoK8Vac0ViUjWAtkmxIb0FI0Ld_-TJdv7QnyIUC_m5TbOythuoxXaUc39_mfvOxgFA-fzQ",
-    }));
-  }, [setUser]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (user?.userId && user?.token) {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/data-class?userId=${user.userId}`,
-            {
-              method: "GET",
-              headers: {
-                Authorization: `${user.token}`,
-                "Content-Type": "application/json",
-              },
-            },
+        if (user?.userId) {
+          const response = await api.get(
+            `/api/data-class?userId=${user.userId}`,
           );
-
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-
-          const data = await response.json();
-          setDataClasses(data);
+          setDataClasses(response.data);
         }
       } catch (error) {
         console.error("Fetch error:", error);
@@ -58,7 +35,7 @@ export default function page() {
     fetchData();
   }, [user]);
 
-  const handleSwitchChange = (dataId) => {
+  const handleSwitchChange = async (dataId) => {
     const dataClass = dataClasses.find(
       (dataClass) => dataClass.dataId === dataId,
     );
@@ -68,28 +45,12 @@ export default function page() {
         prevDataClass.dataId === dataId ? dataClass : prevDataClass,
       ),
     );
-    const putChange = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/data-class`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `${user.token}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(dataClass),
-          },
-        );
 
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-      } catch (error) {
-        console.error("Fetch error:", error);
-      }
-    };
-    putChange();
+    try {
+      await api.post(`/api/data-class`, dataClass);
+    } catch (error) {
+      console.error("Update error:", error);
+    }
   };
 
   return (

@@ -1,7 +1,8 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useUser } from "../context/UserContext";
+import { useUser } from "@/context/UserContext";
+import axios from "axios"; 
 import { cn } from "@/lib/utils";
 
 function LoginCard({ className }) {
@@ -13,19 +14,14 @@ function LoginCard({ className }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(
+      const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, password }),
-        },
+        { email, password },
+        { withCredentials: true }
       );
 
-      if (response.ok) {
-        const user = await response.json();
+      if (response.status === 200) {
+        const user = response.data;
         setUser(user);
         router.push("/dashboard");
       } else {
