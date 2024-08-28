@@ -15,7 +15,7 @@ function LoginCard({ className }) {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/login`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`,
         { email, password },
         { withCredentials: true }
       );
