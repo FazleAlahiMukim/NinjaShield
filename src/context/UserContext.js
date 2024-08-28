@@ -1,12 +1,14 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from 'react';
-import { refreshAccessToken } from '@/lib/auth';
+import { useRouter } from 'next/navigation';
 import { tokenManager } from '@/lib/tokenManager';
 
 const UserContext = createContext();
 
 export function UserProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [userLoading, setUserLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -14,6 +16,7 @@ export function UserProvider({ children }) {
       setUser(JSON.parse(storedUser));
       tokenManager.setToken(JSON.parse(storedUser).token);
     }
+    setUserLoading(false);
   }, []);
 
   useEffect(() => {
@@ -26,20 +29,8 @@ export function UserProvider({ children }) {
     }
   }, [user]);
 
-  const handleTokenRefresh = async () => {
-    try {
-      const newAccessToken = await refreshAccessToken();
-      setUser((prevUser) => ({ ...prevUser, token: newAccessToken }));
-      tokenManager.setToken(newAccessToken);
-    } catch (error) {
-      console.error('Failed to refresh access token:', error);
-      setUser(null);
-      tokenManager.clearToken();
-    }
-  };
-
   return (
-    <UserContext.Provider value={{ user, setUser, handleTokenRefresh }}>
+    <UserContext.Provider value={{ user, setUser, userLoading }}>
       {children}
     </UserContext.Provider>
   );

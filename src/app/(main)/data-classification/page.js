@@ -12,11 +12,12 @@ import {
 } from "@/components/ui/table";
 import Switch from "@/components/Switch";
 import Classification from "./Classification";
-import api from "@/lib/api";
+import { useAuth } from "@/lib/authApi";
 
 export default function page() {
   const { user } = useUser();
   const [dataClasses, setDataClasses] = useState([]);
+  const { api } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {

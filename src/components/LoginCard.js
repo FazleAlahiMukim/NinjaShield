@@ -2,33 +2,43 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/context/UserContext";
-import axios from "axios"; 
+import axios from "axios";
 import { cn } from "@/lib/utils";
+import { PuffLoader } from "react-spinners";
+import { toast } from "sonner";
 
 function LoginCard({ className }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(true);
   const router = useRouter();
   const { setUser } = useUser();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`,
-        { email, password },
-        { withCredentials: true }
+        { email, password, rememberMe: remember },
+        { withCredentials: true },
       );
 
       if (response.status === 200) {
         const user = response.data;
         setUser(user);
         router.push("/dashboard");
-      } else {
-        alert("Invalid credentials. Please try again.");
       }
     } catch (error) {
-      console.error("An error occurred:", error);
+      if (error.response && error.response.status === 401) {
+        toast.error("Invalid credentials. Please try again.");
+      } else {
+        console.error("An error occurred:", error);
+        toast.error("An error occurred. Please try again later.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -85,12 +95,13 @@ function LoginCard({ className }) {
             </a>
           </div>
           <div className="mb-4 flex items-center justify-between">
-            {/* <div className="flex items-center">
+            <div className="flex items-center">
               <input
                 type="checkbox"
                 id="remember"
+                checked={remember}
+                onChange={(e) => setRemember(e.target.checked)}
                 className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:outline-none focus:ring-indigo-500"
-                checked
               />
               <label
                 htmlFor="remember"
@@ -98,7 +109,7 @@ function LoginCard({ className }) {
               >
                 Remember me
               </label>
-            </div> */}
+            </div>
             <a
               href="#"
               className="text-xs text-indigo-500 hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -110,7 +121,12 @@ function LoginCard({ className }) {
             type="submit"
             className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
-            Login
+            <span>Log In</span>
+            <span className="ml-2">
+              {loading && (
+                <PuffLoader color="#fff" size={20} loading={loading} />
+              )}
+            </span>
           </button>
         </form>
       </div>

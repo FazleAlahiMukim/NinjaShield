@@ -15,11 +15,12 @@ import {
   Bars4Icon,
 } from "@heroicons/react/24/outline";
 import { LogOut } from "lucide-react";
-import api from "@/lib/api";
+import { useAuth } from '@/lib/authApi';
 
 export default function TopBar() {
   const { user, setUser } = useUser();
   const router = useRouter();
+  const { api } = useAuth();
 
   const handleLogout = async () => {
     localStorage.removeItem("user");
