@@ -11,17 +11,19 @@ import Loader from "@/components/Loader";
 
 export default function Home() {
   const searchParams = useSearchParams();
-  const { user } = useUser();
+  const { user, userLoading } = useUser();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user) {
-      router.push("/dashboard");
-    } else {
-      setLoading(false);
+    if (!userLoading) {
+      if (user) {
+        router.push("/dashboard");
+      } else {
+        setLoading(false);
+      }
     }
-  }, [user, router]);
+  }, [userLoading]);
 
   useEffect(() => {
     if (!loading && searchParams.get("redirected") === "true") {
@@ -39,9 +41,7 @@ export default function Home() {
   }, [loading]);
 
   if (loading) {
-    return (
-      <Loader />
-    );
+    return <Loader />;
   }
 
   return (

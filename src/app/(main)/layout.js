@@ -6,14 +6,16 @@ import NavBar from "@/components/NavBar";
 import TopBar from "@/components/TopBar";
 
 export default function MainLayout({ children }) {
-  const { user } = useUser();
+  const { user, userLoading } = useUser();
   const router = useRouter();
 
   useEffect(() => {
-    if (!user && router.pathname !== "/") {
-      router.replace("/?redirected=true");
+    if (!userLoading) {
+      if (!user && router.pathname !== "/") {
+        router.replace("/?redirected=true");
+      }
     }
-  }, []);
+  }, [userLoading]); 
 
   if (!user) {
     return null;
