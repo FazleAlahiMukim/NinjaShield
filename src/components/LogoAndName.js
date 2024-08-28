@@ -10,7 +10,6 @@ export default function LogoAndName({ size = "large" }) {
         width={size == "large" ? 100 : size == "small" ? 50 : 75}
         height={size == "large" ? 60 : size == "small" ? 30 : 45}
         style={{ width: 'auto', height: 'auto' }}
-        priority
       />
       <Image
         className={size == "large" ? "ml-6" : size == "small" ? "ml-2" : "ml-1"}
