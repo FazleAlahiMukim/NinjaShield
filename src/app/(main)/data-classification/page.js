@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/table";
 import Switch from "@/components/Switch";
 import Classification from "./Classification";
+import Delete from "./Delete";
 import { useAuth } from "@/lib/authApi";
 
 export default function page() {
@@ -54,6 +55,19 @@ export default function page() {
     }
   };
 
+  const handleDelete = async (dataId) => {
+    setDataClasses((prevDataClasses) =>
+      prevDataClasses.filter((prevDataClass) => prevDataClass.dataId !== dataId),
+    );
+
+    
+    try {
+      await api.delete(`/api/data-class?dataId=${dataId}`);
+    } catch (error) {
+      console.error("Delete error:", error);
+    }
+  };
+
   return (
     <div className="relative top-5">
       <div className="flex flex-row justify-between">
@@ -71,6 +85,7 @@ export default function page() {
             <TableHead>Description</TableHead>
             <TableHead className="text-right">Events (last 7 days)</TableHead>
             <TableHead className="text-right">Last Update</TableHead>
+            <TableHead className="w-[50px]"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -94,23 +109,12 @@ export default function page() {
                   ? new Date(dataClass.lastUpdated).toLocaleString()
                   : "--"}
               </TableCell>
+              <TableCell>
+                <Delete onContinue={() => handleDelete(dataClass.dataId)} />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={3}></TableCell>
-            <TableCell colSpan={1} className="text-right">
-              Total Events
-            </TableCell>
-            <TableCell className="text-right">
-              {dataClasses.reduce(
-                (total, dataClass) => total + dataClass.events,
-                0,
-              )}
-            </TableCell>
-          </TableRow>
-        </TableFooter>
       </Table>
     </div>
   );
