@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 import {
   Dialog,
   DialogContent,
@@ -26,7 +27,7 @@ export default function Rule({ onSaveRule, rule }) {
   const addElement = () => {
     setElements((prevElements) => [
       ...prevElements,
-      { id: prevElements.length, data: { type: "keyword", text: [] } },
+      { id: uuidv4(), data: { type: "keyword", text: [] } },
     ]);
   };
 
@@ -45,7 +46,6 @@ export default function Rule({ onSaveRule, rule }) {
           : element,
       );
 
-      // Prevent infinite loop by only updating if there are actual changes
       return JSON.stringify(updatedElements) !== JSON.stringify(prevElements)
         ? updatedElements
         : prevElements;
