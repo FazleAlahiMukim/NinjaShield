@@ -14,12 +14,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import Rule from "./Rule";
+import { useAuth } from "@/lib/authApi";
+import { toast } from "sonner";
 
-export default function Classification({ dataClass }) {
+export default function Classification({ dataClass, onSave }) {
   const { user } = useUser();
   const [rules, setRules] = useState([]);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const { api } = useAuth();
+  
 
   const handleSaveRule = (newRule, prevRule) => {
     if (prevRule) {
@@ -58,24 +62,13 @@ export default function Classification({ dataClass }) {
     };
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/data-class/save`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `${user.token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(dataClassAndRules),
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to save data classification");
-      }
+      const response = await api.post(`/api/data-class/save`, dataClassAndRules);
+      toast.success(`Data Classification "${name}" saved successfully`);
+      onSave(response.data);
     } catch (error) {
-      console.error("Error saving classification:", error);
+      console.error("Data Classification Save error:", error);
     }
+    handleCancel();
   };
 
   const handleCancel = () => {
@@ -150,10 +143,10 @@ export default function Classification({ dataClass }) {
           </div>
         </div>
         <DialogFooter>
-          <DialogClose>
+          <DialogClose asChild>
             <Button onClick={handleSaveClassification}>Save</Button>
           </DialogClose>
-          <DialogClose>
+          <DialogClose asChild>
             <Button onClick={handleCancel}>Cancel</Button>
           </DialogClose>
         </DialogFooter>

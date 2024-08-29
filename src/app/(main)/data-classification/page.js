@@ -14,6 +14,8 @@ import Switch from "@/components/Switch";
 import Classification from "./Classification";
 import Delete from "./Delete";
 import { useAuth } from "@/lib/authApi";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 export default function page() {
   const { user } = useUser();
@@ -55,14 +57,23 @@ export default function page() {
     }
   };
 
-  const handleDelete = async (dataId) => {
+  const handleAddClassification = (newClassification) => {
+    setDataClasses((prevDataClasses) => [
+      ...prevDataClasses,
+      newClassification,
+    ]);
+  };
+
+  const handleDelete = async (dataId, name) => {
     setDataClasses((prevDataClasses) =>
-      prevDataClasses.filter((prevDataClass) => prevDataClass.dataId !== dataId),
+      prevDataClasses.filter(
+        (prevDataClass) => prevDataClass.dataId !== dataId,
+      ),
     );
 
-    
     try {
       await api.delete(`/api/data-class?dataId=${dataId}`);
+      toast.success(`Data Classification "${name}" deleted successfully`);
     } catch (error) {
       console.error("Delete error:", error);
     }
@@ -70,14 +81,15 @@ export default function page() {
 
   return (
     <div className="relative top-5">
+      <Toaster richColors closeButton />
       <div className="flex flex-row justify-between">
         <h1 className="relative left-5 text-xl font-bold">
           {" "}
           Data Classification{" "}
         </h1>
-        <Classification />
+        <Classification onSave={handleAddClassification} />
       </div>
-      <Table className="text-base">
+      <Table className="text-sm">
         <TableHeader>
           <TableRow className="font-serif uppercase">
             <TableHead className="w-[50px]"></TableHead>
@@ -91,7 +103,7 @@ export default function page() {
         <TableBody>
           {dataClasses.map((dataClass) => (
             <TableRow key={dataClass.dataId}>
-              <TableCell>
+              <TableCell className="pt-3">
                 <Switch
                   checked={dataClass.isActive}
                   onChange={() => handleSwitchChange(dataClass.dataId)}
@@ -106,11 +118,19 @@ export default function page() {
               <TableCell className="text-right">{dataClass.events}</TableCell>
               <TableCell className="text-right">
                 {dataClass.lastUpdated
-                  ? new Date(dataClass.lastUpdated).toLocaleString()
+                  ? new Date(dataClass.lastUpdated).toLocaleString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      second: "2-digit",
+                      hour12: false,
+                    })
                   : "--"}
               </TableCell>
               <TableCell>
-                <Delete onContinue={() => handleDelete(dataClass.dataId)} />
+                <Delete name={dataClass.name} onContinue={() => handleDelete(dataClass.dataId, dataClass.name)} />
               </TableCell>
             </TableRow>
           ))}

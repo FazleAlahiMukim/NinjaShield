@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { TrashIcon } from "@heroicons/react/24/outline";
 
-export default function Delete({ onContinue }) {
+export default function Delete({ name, onContinue }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -24,8 +24,8 @@ export default function Delete({ onContinue }) {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete this data
-            classification.
+            This action cannot be undone. <br />
+            This will permanently delete <span className="font-extrabold">{name}</span> data classification.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
