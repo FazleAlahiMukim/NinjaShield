@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
   Dialog,
@@ -11,6 +11,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   InformationCircleIcon,
   PlusCircleIcon,
@@ -23,6 +24,7 @@ export default function Rule({ onSaveRule, rule }) {
   const [elements, setElements] = useState([]);
   const [ruleName, setRuleName] = useState("");
   const [occurrences, setOccurrences] = useState(1);
+  const nameInputRef = useRef(null);
 
   const addElement = () => {
     setElements((prevElements) => [
@@ -60,6 +62,13 @@ export default function Rule({ onSaveRule, rule }) {
     }
   }, [rule]);
 
+  useEffect(() => {
+    if (nameInputRef.current) {
+      const inputLength = nameInputRef.current.value.length;
+      nameInputRef.current.setSelectionRange(inputLength, inputLength);
+    }
+  }, [nameInputRef.current]);
+
   const handleSave = () => {
     const newRule = {
       name: ruleName,
@@ -88,7 +97,7 @@ export default function Rule({ onSaveRule, rule }) {
     <Dialog>
       <DialogTrigger asChild>
         {rule ? (
-          <span className="p-1 hover:cursor-pointer hover:bg-slate-200">
+          <span className="mr-3 p-1 hover:cursor-pointer hover:bg-slate-200">
             <EllipsisVerticalIcon className="h-4 w-4 text-gray-600" />
           </span>
         ) : (
@@ -122,6 +131,7 @@ export default function Rule({ onSaveRule, rule }) {
                 value={ruleName || ""}
                 onChange={(e) => setRuleName(e.target.value)}
                 className="w-full border-b-2 border-gray-300 transition duration-300 ease-in-out focus:border-purple-500 focus:outline-none"
+                ref={nameInputRef}
               />
             </div>
             <div className="flex-1">
@@ -146,23 +156,25 @@ export default function Rule({ onSaveRule, rule }) {
             <span className="font-extrabold">all</span> the elements below.
           </div>
           <div className="my-2">
-            {elements &&
-              elements.map((element) => (
-                <div key={element.id} className="mb-2 flex items-end space-x-2">
-                  <button
-                    onClick={() => removeElement(element.id)}
-                    className="text-red-500"
-                  >
-                    <XCircleIcon className="h-5 w-5" />
-                  </button>
-                  <Element
-                    onElementChange={(data) =>
-                      handleElementChange(element.id, data)
-                    }
-                    element={rule ? element : undefined}
-                  />
-                </div>
-              ))}
+            <ScrollArea>
+              {elements &&
+                elements.map((element) => (
+                  <div key={element.id} className="mb-2 flex items-end space-x-2">
+                    <button
+                      onClick={() => removeElement(element.id)}
+                      className="text-red-500"
+                    >
+                      <XCircleIcon className="h-5 w-5" />
+                    </button>
+                    <Element
+                      onElementChange={(data) =>
+                        handleElementChange(element.id, data)
+                      }
+                      element={rule ? element : undefined}
+                    />
+                  </div>
+                ))}
+            </ScrollArea>
           </div>
 
           <div className="py-3">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useUser } from "@/context/UserContext";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -12,7 +12,8 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { InformationCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import Rule from "./Rule";
 import { useAuth } from "@/lib/authApi";
 import { toast } from "sonner";
@@ -23,18 +24,60 @@ export default function Classification({ dataClass, onSave }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const { api } = useAuth();
-  
+
+  const fetchRules = async () => {
+    try {
+      const response = await api.get(
+        `/api/data-class/rules?dataId=${dataClass.dataId}`,
+      );
+      setRules(response.data);
+      setRules((prevRules) => {
+        return prevRules.map((rule) => {
+          return {
+            ...rule,
+            elements: rule.elements.map((element) => {
+              return {
+                id: uuidv4(),
+                data: {
+                  type: element.type,
+                  text: element.text,
+                },
+              };
+            }),
+          };
+        });
+      });
+    } catch (error) {
+      console.error("Fetch Rules error:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (dataClass) {
+      setName(dataClass.name);
+      setDescription(dataClass.description);
+      fetchRules();
+    }
+  }, [dataClass]);
+
+  const removeRule = (ruleId) => {
+    setRules((prevRules) =>
+      prevRules.filter((rule) => rule.ruleId !== ruleId),
+    );
+  };
 
   const handleSaveRule = (newRule, prevRule) => {
     if (prevRule) {
       setRules((prevRules) =>
         prevRules.map((rule) =>
-          rule.id === prevRule.id ? { ...newRule, id: prevRule.id } : rule,
+          rule.ruleId === prevRule.ruleIid
+            ? { ...newRule, ruleId: prevRule.ruleId }
+            : rule,
         ),
       );
       return;
     }
-    newRule.id = uuidv4();
+    newRule.ruleId = uuidv4();
     setRules((prevRules) => [...prevRules, newRule]);
   };
 
@@ -52,8 +95,9 @@ export default function Classification({ dataClass, onSave }) {
       };
     });
     const dataClassAndRules = {
+      dataId: dataClass?.dataId,
       userId: user.userId,
-      isActive: true,
+      isActive: dataClass?.isActive || true,
       name,
       description,
       events: 0,
@@ -62,8 +106,13 @@ export default function Classification({ dataClass, onSave }) {
     };
 
     try {
-      const response = await api.post(`/api/data-class/save`, dataClassAndRules);
-      toast.success(`Data Classification "${name}" saved successfully`);
+      const response = await api.post(
+        `/api/data-class/save`,
+        dataClassAndRules,
+      );
+      if (dataClass)
+        toast.success(`Data Classification "${name}" updated successfully`);
+      else toast.success(`Data Classification "${name}" added successfully`);
       onSave(response.data);
     } catch (error) {
       console.error("Data Classification Save error:", error);
@@ -72,15 +121,30 @@ export default function Classification({ dataClass, onSave }) {
   };
 
   const handleCancel = () => {
-    setName("");
-    setDescription("");
-    setRules([]);
+    if (dataClass) {
+      setName(dataClass.name);
+      setDescription(dataClass.description);
+      fetchRules();
+    } else {
+      setName("");
+      setDescription("");
+      setRules([]);
+    }
   };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="relative right-5">Add Classification</Button>
+        {dataClass ? (
+          <Button
+            variant="ghost"
+            className="rounded bg-violet-100 p-2 hover:bg-purple-200"
+          >
+            {dataClass.name}
+          </Button>
+        ) : (
+          <Button className="relative right-5">Add Classification</Button>
+        )}
       </DialogTrigger>
       <DialogContent className="w-full text-sm">
         <DialogHeader>
@@ -103,7 +167,7 @@ export default function Classification({ dataClass, onSave }) {
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full border-b-2 border-gray-300 transition duration-300 ease-in-out focus:border-blue-500 focus:outline-none"
+                className="w-full border-b-2 border-gray-300 transition duration-300 ease-in-out focus:border-purple-500 focus:outline-none"
               />
             </div>
             <div className="flex-1">
@@ -118,7 +182,7 @@ export default function Classification({ dataClass, onSave }) {
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full border-b-2 border-gray-300 transition duration-300 ease-in-out focus:border-blue-500 focus:outline-none"
+                className="w-full border-b-2 border-gray-300 transition duration-300 ease-in-out focus:border-purple-500 focus:outline-none"
               />
             </div>
           </div>
@@ -128,15 +192,25 @@ export default function Classification({ dataClass, onSave }) {
             <span className="font-extrabold">any</span> of the rules below.
           </div>
           <div className="m-2 flex flex-col p-2 font-serif text-base">
-            {rules.map((rule, index) => (
-              <div
-                key={index}
-                className="mb-2 flex flex-row items-center justify-between text-gray-800"
-              >
-                {rule.name}
-                <Rule rule={rule} onSaveRule={handleSaveRule} />
-              </div>
-            ))}
+            <ScrollArea>
+              {rules.map((rule) => (
+                <div
+                  key={rule.ruleId}
+                  className="mb-2 flex flex-row items-center justify-between text-gray-800"
+                >
+                  <div className="flex flex-row items-center">
+                    <button
+                      onClick={() => removeRule(rule.ruleId)}
+                      className="text-red-500"
+                    >
+                      <XCircleIcon className="size-5" />
+                    </button>
+                    <span className="pl-2">{rule.name}</span>
+                  </div>
+                  <Rule rule={rule} onSaveRule={handleSaveRule} />
+                </div>
+              ))}
+            </ScrollArea>
           </div>
           <div className="py-3">
             <Rule onSaveRule={handleSaveRule} />

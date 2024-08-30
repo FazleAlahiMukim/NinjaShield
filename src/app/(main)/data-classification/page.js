@@ -22,20 +22,20 @@ export default function page() {
   const [dataClasses, setDataClasses] = useState([]);
   const { api } = useAuth();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (user?.userId) {
-          const response = await api.get(
-            `/api/data-class?userId=${user.userId}`,
-          );
-          setDataClasses(response.data);
-        }
-      } catch (error) {
-        console.error("Fetch error:", error);
+  const fetchData = async () => {
+    try {
+      if (user?.userId) {
+        const response = await api.get(
+          `/api/data-class?userId=${user.userId}`,
+        );
+        setDataClasses(response.data);
       }
-    };
+    } catch (error) {
+      console.error("Fetch error:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, [user]);
 
@@ -64,6 +64,11 @@ export default function page() {
     ]);
   };
 
+  const handleEditClassification = () => {
+    fetchData();
+  };
+    
+
   const handleDelete = async (dataId, name) => {
     setDataClasses((prevDataClasses) =>
       prevDataClasses.filter(
@@ -80,7 +85,7 @@ export default function page() {
   };
 
   return (
-    <div className="relative top-5">
+    <div className="relative top-5 rounded-md bg-white">
       <Toaster richColors closeButton />
       <div className="flex flex-row justify-between">
         <h1 className="relative left-5 text-xl font-bold">
@@ -110,9 +115,7 @@ export default function page() {
                 />
               </TableCell>
               <TableCell className="font-medium">
-                <span className="rounded bg-violet-100 p-2">
-                  {dataClass.name}
-                </span>
+                <Classification dataClass={dataClass} onSave={handleEditClassification}/>
               </TableCell>
               <TableCell>{dataClass.description}</TableCell>
               <TableCell className="text-right">{dataClass.events}</TableCell>
