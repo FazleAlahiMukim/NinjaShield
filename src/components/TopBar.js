@@ -37,7 +37,7 @@ export default function TopBar() {
   };
 
   return (
-    <div className="flex h-20 flex-row items-center justify-between bg-customGray">
+    <div className="flex h-20 pl-10 flex-row items-center justify-between bg-customGray">
       <div className="relative left-5 flex flex-row items-end">
         <span className="text-xl uppercase">
           {user?.organization || "Organization"}

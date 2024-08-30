@@ -25,9 +25,7 @@ export default function page() {
   const fetchData = async () => {
     try {
       if (user?.userId) {
-        const response = await api.get(
-          `/api/data-class?userId=${user.userId}`,
-        );
+        const response = await api.get(`/api/data-class?userId=${user.userId}`);
         setDataClasses(response.data);
       }
     } catch (error) {
@@ -67,7 +65,6 @@ export default function page() {
   const handleEditClassification = () => {
     fetchData();
   };
-    
 
   const handleDelete = async (dataId, name) => {
     setDataClasses((prevDataClasses) =>
@@ -85,7 +82,7 @@ export default function page() {
   };
 
   return (
-    <div className="relative top-5 rounded-md bg-white">
+    <div className="relative top-4 mx-10 mb-10 rounded-3xl bg-white p-4 pt-5 shadow-2xl">
       <Toaster richColors closeButton />
       <div className="flex flex-row justify-between">
         <h1 className="relative left-5 text-xl font-bold">
@@ -94,51 +91,61 @@ export default function page() {
         </h1>
         <Classification onSave={handleAddClassification} />
       </div>
-      <Table className="text-sm">
-        <TableHeader>
-          <TableRow className="font-serif uppercase">
-            <TableHead className="w-[50px]"></TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Description</TableHead>
-            <TableHead className="text-right">Events (last 7 days)</TableHead>
-            <TableHead className="text-right">Last Update</TableHead>
-            <TableHead className="w-[50px]"></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {dataClasses.map((dataClass) => (
-            <TableRow key={dataClass.dataId}>
-              <TableCell className="pt-3">
-                <Switch
-                  checked={dataClass.isActive}
-                  onChange={() => handleSwitchChange(dataClass.dataId)}
-                />
-              </TableCell>
-              <TableCell className="font-medium">
-                <Classification dataClass={dataClass} onSave={handleEditClassification}/>
-              </TableCell>
-              <TableCell>{dataClass.description}</TableCell>
-              <TableCell className="text-right">{dataClass.events}</TableCell>
-              <TableCell className="text-right">
-                {dataClass.lastUpdated
-                  ? new Date(dataClass.lastUpdated).toLocaleString("en-GB", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      second: "2-digit",
-                      hour12: false,
-                    })
-                  : "--"}
-              </TableCell>
-              <TableCell>
-                <Delete name={dataClass.name} onContinue={() => handleDelete(dataClass.dataId, dataClass.name)} />
-              </TableCell>
+      <div className="max-h-[calc(100vh-200px)] overflow-auto">
+        <Table>
+          <TableHeader>
+            <TableRow className="font-serif uppercase">
+              <TableHead className="w-[50px]"></TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Description</TableHead>
+              <TableHead className="text-right">Events (last 7 days)</TableHead>
+              <TableHead className="text-right">Last Update</TableHead>
+              <TableHead className="w-[50px]"></TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {dataClasses.map((dataClass) => (
+              <TableRow key={dataClass.dataId}>
+                <TableCell className="pt-3">
+                  <Switch
+                    checked={dataClass.isActive}
+                    onChange={() => handleSwitchChange(dataClass.dataId)}
+                  />
+                </TableCell>
+                <TableCell className="font-medium">
+                  <Classification
+                    dataClass={dataClass}
+                    onSave={handleEditClassification}
+                  />
+                </TableCell>
+                <TableCell>{dataClass.description}</TableCell>
+                <TableCell className="text-right">{dataClass.events}</TableCell>
+                <TableCell className="text-right">
+                  {dataClass.lastUpdated
+                    ? new Date(dataClass.lastUpdated).toLocaleString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                        hour12: false,
+                      })
+                    : "--"}
+                </TableCell>
+                <TableCell>
+                  <Delete
+                    name={dataClass.name}
+                    onContinue={() =>
+                      handleDelete(dataClass.dataId, dataClass.name)
+                    }
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }

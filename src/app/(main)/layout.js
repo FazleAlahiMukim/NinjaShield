@@ -26,7 +26,7 @@ export default function MainLayout({ children }) {
       <NavBar />
       <div className="flex-grow">
         <TopBar />
-        {children}
+        <div className="bg-customGray">{children}</div>
       </div>
     </div>
   );
