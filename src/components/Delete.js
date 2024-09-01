@@ -25,7 +25,7 @@ export default function Delete({ name, onContinue }) {
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
             This action cannot be undone. <br />
-            This will permanently delete <span className="font-extrabold">{name}</span> data classification.
+            This will permanently delete <span className="font-extrabold">{name}</span>.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table";
 import Switch from "@/components/Switch";
 import Classification from "./Classification";
-import Delete from "./Delete";
+import Delete from "@/components/Delete";
 import { useAuth } from "@/lib/authApi";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
