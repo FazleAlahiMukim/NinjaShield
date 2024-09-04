@@ -42,18 +42,30 @@ export default function Policy({
   const [destinations, setDestinations] = useState([]);
   const { api } = useAuth();
 
+  const initializePolicy = () => {
+    setName(policy.name);
+    setRisk(policy.risk);
+    setAction(policy.action);
+    setFileCategories(policy.fileCategories);
+    setDataClasses(
+      allDataClasses
+        .filter((dataClass) => policy.dataClasses.includes(dataClass.dataId))
+        .map((dataClass) => dataClass.name),
+    );
+    setDestinations(policy.destinations);
+  };
+
   useEffect(() => {
     if (policy) {
-      setName(policy.name);
-      setRisk(policy.risk);
-      setAction(policy.action);
-      setFileCategories(policy.fileCategories);
-      setDataClasses(policy.dataClasses);
-      setDestinations(policy.destinations);
+      initializePolicy();
     }
   }, [policy]);
 
   const handleSavePolicy = async () => {
+    const refactoredDataClasses = allDataClasses
+      .filter((dataClass) => dataClasses.includes(dataClass.name))
+      .map((dataClass) => dataClass.dataId);
+
     const newPolicy = {
       policyId: policy?.policyId,
       userId: user.userId,
@@ -64,7 +76,7 @@ export default function Policy({
       events: 0,
       lastUpdated: new Date(),
       fileCategories,
-      dataClasses,
+      dataClasses: refactoredDataClasses,
       destinations,
     };
 
@@ -76,17 +88,12 @@ export default function Policy({
     } catch (error) {
       console.error("Policy Save error:", error);
     }
-    handleCancel();
+    if (!policy) handleCancel();
   };
 
   const handleCancel = () => {
     if (policy) {
-      setName(policy.name);
-      setRisk(policy.risk);
-      setAction(policy.action);
-      setFileCategories(policy.fileCategories);
-      setDataClasses(policy.dataClasses);
-      setDestinations(policy.destinations);
+      initializePolicy();
     } else {
       setName("");
       setRisk("high");
@@ -111,100 +118,104 @@ export default function Policy({
           <Button className="relative right-5">Add Policy</Button>
         )}
       </DialogTrigger>
-      <DialogContent className="w-full text-sm">
+      <DialogContent className="text-sm">
         <DialogHeader>
           <DialogTitle>Policy</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
-        <div>
-          <div>
-            <label htmlFor="name" className="block font-medium text-gray-700">
-              1. Enter name
-            </label>
-            <input
-              type="text"
-              id="name"
-              value={name}
-              placeholder="Policy name"
-              onChange={(e) => setName(e.target.value)}
-              className="w-full border-b-2 border-gray-300 transition duration-300 ease-in-out focus:border-purple-500 focus:outline-none"
-            />
+        <div className="space-y-6">
+          <div className="flex items-start space-x-2">
+            <span>1.</span>
+            <div className="w-full space-y-2">
+              <label htmlFor="name">Enter name</label>
+              <input
+                type="text"
+                id="name"
+                value={name}
+                placeholder="Policy name"
+                onChange={(e) => setName(e.target.value)}
+                className="w-full border-b-2 border-gray-300 py-1 transition duration-300 ease-in-out focus:border-purple-500 focus:outline-none"
+              />
+            </div>
           </div>
-          <div>
-            <label htmlFor="risk" className="block font-medium text-gray-700">
-              2. Select risk
-            </label>
-            <RadioGroup
-              defaultValue="high"
-              className="flex flex-row justify-center space-x-10"
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="high" id="high" />
-                <Risk risk="high" />
+          <div className="flex items-start space-x-2">
+            <span>2.</span>
+            <div className="w-full">
+              <label htmlFor="risk">Select risk</label>
+              <RadioGroup
+                value={risk}
+                defaultValue="high"
+                onValueChange={(value) => setRisk(value)}
+                className="-mt-2 flex justify-center space-x-10"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="high" id="high" />
+                  <Risk risk="high" />
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="low" id="low" />
+                  <Risk risk="low" />
+                </div>
+              </RadioGroup>
+              <div className="mt-5">
+                <label htmlFor="action" className="text-xs">
+                  Action
+                </label>
+                <Select
+                  value={action}
+                  onValueChange={(value) => setAction(value)}
+                >
+                  <SelectTrigger className="w-full border-gray-300 focus:border-purple-500">
+                    <SelectValue placeholder="Select action" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="block">
+                        <Action action={"block"} />
+                      </SelectItem>
+                      <SelectItem value="warn">
+                        <Action action={"warn"} />
+                      </SelectItem>
+                      <SelectItem value="log">
+                        <Action action={"log"} />
+                      </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="low" id="low" />
-                <Risk risk="low" />
-              </div>
-            </RadioGroup>
+            </div>
           </div>
-          <div>
-            <label htmlFor="action" className="block font-medium text-gray-700">
-              Action
-            </label>
-            <Select value={action} onValueChange={(value) => setAction(value)}>
-              <SelectTrigger className="w-[180px] border-gray-400 focus:border-purple-500">
-                <SelectValue placeholder="Select action" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="block">
-                    <Action action={"block"} />
-                  </SelectItem>
-                  <SelectItem value="warn">
-                    <Action action={"warn"} />
-                  </SelectItem>
-                  <SelectItem value="log">
-                    <Action action={"log"} />
-                  </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <label
-              htmlFor="fileCategories"
-              className="block font-medium text-gray-700"
-            >
-              3. Select data
-            </label>
-            <DropDownSelect
-              allObjects={allFileCategories}
-              objects={fileCategories}
-              setObjects={setFileCategories}
-              name="File category"
-            />
+          <div className="flex items-start space-x-2">
+            <span>3.</span>
+            <div className="w-full space-y-2">
+              <label htmlFor="selectData">Select data</label>
+              <DropDownSelect
+                allObjects={allFileCategories}
+                objects={fileCategories}
+                setObjects={setFileCategories}
+                name="File category"
+              />
 
-            <DropDownSelect
-              allObjects={allDataClasses}
-              objects={dataClasses}
-              setObjects={setDataClasses}
-              name="Data classification"
-            />
+              <DropDownSelect
+                allObjects={allDataClasses}
+                objects={dataClasses}
+                setObjects={setDataClasses}
+                name="Data classification"
+              />
+            </div>
           </div>
-          <div>
-            <label
-              htmlFor="fileCategories"
-              className="block font-medium text-gray-700"
-            >
-              4. Select destination
-            </label>
-            <DropDownSelect
-              allObjects={allDestinations}
-              objects={destinations}
-              setObjects={setDestinations}
-              name="Destination"
-            />
+
+          <div className="flex items-start space-x-2">
+            <span>4.</span>
+            <div className="w-full space-y-2">
+              <label htmlFor="destination">Select destination</label>
+              <DropDownSelect
+                allObjects={allDestinations}
+                objects={destinations}
+                setObjects={setDestinations}
+                name="Destination"
+              />
+            </div>
           </div>
         </div>
         <DialogFooter>
@@ -212,7 +223,9 @@ export default function Policy({
             <Button onClick={handleSavePolicy}>Save</Button>
           </DialogClose>
           <DialogClose asChild>
-            <Button onClick={handleCancel}>Cancel</Button>
+            <Button onClick={handleCancel} variant="secondary">
+              Cancel
+            </Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

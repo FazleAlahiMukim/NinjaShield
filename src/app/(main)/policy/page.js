@@ -92,7 +92,7 @@ export default function page() {
   };
 
   const handleEditPolicy = () => {
-    fetchData();
+    fetchPolicy();
   };
 
   const handleDelete = async (policyId, name) => {
