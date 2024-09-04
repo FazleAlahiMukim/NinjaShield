@@ -189,7 +189,7 @@ export default function Rule({ onSaveRule, rule }) {
             <Button onClick={handleSave}>Save</Button>
           </DialogClose>
           <DialogClose asChild>
-            <Button onClick={handleCancel}>Cancel</Button>
+            <Button onClick={handleCancel} variant="secondary">Cancel</Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

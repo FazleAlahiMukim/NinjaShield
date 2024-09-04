@@ -221,7 +221,7 @@ export default function Classification({ dataClass, onSave }) {
             <Button onClick={handleSaveClassification}>Save</Button>
           </DialogClose>
           <DialogClose asChild>
-            <Button onClick={handleCancel}>Cancel</Button>
+            <Button onClick={handleCancel} variant="secondary">Cancel</Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>
