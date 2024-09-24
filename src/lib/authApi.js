@@ -8,7 +8,6 @@ export function useAuth() {
   const router = useRouter();
   const { setUser } = useUser();
 
-  // Use useCallback to memoize refreshAccessToken
   const refreshAccessToken = useCallback(async () => {
     try {
       const response = await axios.post(
