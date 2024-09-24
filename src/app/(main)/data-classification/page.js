@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useUser } from "@/context/UserContext";
 import {
   Table,
@@ -22,7 +22,7 @@ export default function Page() {
   const [dataClasses, setDataClasses] = useState([]);
   const { api } = useAuth();
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       if (user?.userId) {
         const response = await api.get(`/api/data-class?userId=${user.userId}`);
@@ -31,7 +31,7 @@ export default function Page() {
     } catch (error) {
       console.error("Fetch error:", error);
     }
-  };
+  }, [user, api]);
 
   useEffect(() => {
     fetchData();

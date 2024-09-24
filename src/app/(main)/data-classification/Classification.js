@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useUser } from "@/context/UserContext";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -25,7 +25,7 @@ export default function Classification({ dataClass, onSave }) {
   const [description, setDescription] = useState("");
   const { api } = useAuth();
 
-  const fetchRules = async () => {
+  const fetchRules = useCallback(async () => {
     try {
       const response = await api.get(
         `/api/data-class/rules?dataId=${dataClass.dataId}`,
@@ -50,7 +50,7 @@ export default function Classification({ dataClass, onSave }) {
     } catch (error) {
       console.error("Fetch Rules error:", error);
     }
-  };
+  }, [dataClass.dataId]);
 
   useEffect(() => {
     if (dataClass) {
