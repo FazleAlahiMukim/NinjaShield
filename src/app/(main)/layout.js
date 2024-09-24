@@ -15,7 +15,7 @@ export default function MainLayout({ children }) {
         router.replace("/?redirected=true");
       }
     }
-  }, [userLoading]); 
+  }, [userLoading, user, router]);
 
   if (!user) {
     return null;

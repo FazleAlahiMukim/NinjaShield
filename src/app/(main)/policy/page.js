@@ -18,7 +18,7 @@ import Policy from "./Policy";
 import Risk from "./Risk";
 import Action from "./Action";
 
-export default function page() {
+export default function Page() {
   const { user } = useUser();
   const [policies, setPolicies] = useState([]);
   const [allDestinations, setDestinations] = useState([]);

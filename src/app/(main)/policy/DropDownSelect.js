@@ -8,7 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { cn } from "@/lib/utils";
 
-export default function ({ allObjects, objects, setObjects, name }) {
+export default function DropDownSelect ({ allObjects, objects, setObjects, name }) {
 
   const handleObjectChange = (name) => {
     if (objects.includes(name)) {

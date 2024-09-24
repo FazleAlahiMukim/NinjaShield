@@ -58,7 +58,7 @@ export default function Classification({ dataClass, onSave }) {
       setDescription(dataClass.description);
       fetchRules();
     }
-  }, [dataClass]);
+  }, [dataClass, fetchRules]);
 
   const removeRule = (ruleId) => {
     setRules((prevRules) =>

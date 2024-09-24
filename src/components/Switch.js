@@ -1,6 +1,6 @@
 import Switch from "react-switch";
 
-export default function ({ checked, onChange }) {
+export default function MySwitch ({ checked, onChange }) {
   return (
     <Switch
       checked={checked}

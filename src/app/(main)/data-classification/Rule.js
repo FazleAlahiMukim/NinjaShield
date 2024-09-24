@@ -67,7 +67,7 @@ export default function Rule({ onSaveRule, rule }) {
       const inputLength = nameInputRef.current.value.length;
       nameInputRef.current.setSelectionRange(inputLength, inputLength);
     }
-  }, [nameInputRef.current]);
+  }, []);
 
   const handleSave = () => {
     const newRule = {

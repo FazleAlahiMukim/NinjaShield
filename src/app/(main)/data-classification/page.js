@@ -17,7 +17,7 @@ import { useAuth } from "@/lib/authApi";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 
-export default function page() {
+export default function Page() {
   const { user } = useUser();
   const [dataClasses, setDataClasses] = useState([]);
   const { api } = useAuth();
@@ -35,7 +35,7 @@ export default function page() {
 
   useEffect(() => {
     fetchData();
-  }, [user]);
+  }, [user, fetchData]);
 
   const handleSwitchChange = async (dataId) => {
     const dataClass = dataClasses.find(

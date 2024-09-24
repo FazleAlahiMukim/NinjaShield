@@ -31,7 +31,7 @@ export default function Element({ onElementChange, element }) {
       setType(element.data.type);
       setText(element.data.text);
     }
-  }, []);
+  }, [element]);
 
   useEffect(() => {
     const newElementData = { type, text };
