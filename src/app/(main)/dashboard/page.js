@@ -40,9 +40,9 @@ function getData() {
       dataClass: "Personal",
       file: "file.txt",
       user: "Alahi",
-      destination: "USB",
+      destination: "Email",
       source: "C:\\",
-      time: "2024-09-24 10:00:00",
+      time: "2024-09-24 10:23:00",
     },
     {
       id: "728ed52f",
@@ -50,10 +50,10 @@ function getData() {
       action: "warn",
       dataClass: "Personal",
       file: "file.txt",
-      user: "Fazle",
+      user: "Mijan",
       destination: "USB",
       source: "C:\\",
-      time: "2024-09-24 10:00:00",
+      time: "2024-09-23 11:56:00",
     },
     {
       id: "728ed52f",
@@ -61,10 +61,10 @@ function getData() {
       action: "log",
       dataClass: "Personal",
       file: "file.txt",
-      user: "Alahi",
-      destination: "USB",
+      user: "Sayeed",
+      destination: "Email",
       source: "C:\\",
-      time: "2024-09-24 10:00:00",
+      time: "2024-09-22 16:34:00",
     },
     {
       id: "728ed52f",
@@ -72,10 +72,10 @@ function getData() {
       action: "block",
       dataClass: "Personal",
       file: "file.txt",
-      user: "Fazle",
-      destination: "USB",
+      user: "Junayed",
+      destination: "Email",
       source: "C:\\",
-      time: "2024-09-22 10:00:00",
+      time: "2024-09-21 14:18:00",
     },
     {
       id: "728ed52f",
@@ -83,10 +83,10 @@ function getData() {
       action: "block",
       dataClass: "Personal",
       file: "file.txt",
-      user: "Alahi",
+      user: "Foisal",
       destination: "USB",
       source: "C:\\",
-      time: "2024-09-24 10:00:00",
+      time: "2024-09-23 23:12:00",
     },
     {
       id: "728ed52f",
@@ -94,10 +94,10 @@ function getData() {
       action: "block",
       dataClass: "Personal",
       file: "file.txt",
-      user: "Fazle",
+      user: "Karim",
       destination: "USB",
       source: "C:\\",
-      time: "2024-09-24 10:00:00",
+      time: "2024-09-22 06:30:00",
     },
     {
       id: "728ed52f",
@@ -105,21 +105,10 @@ function getData() {
       action: "block",
       dataClass: "Personal",
       file: "file.txt",
-      user: "Alahi",
-      destination: "USB",
+      user: "Junayed",
+      destination: "Web",
       source: "C:\\",
-      time: "2024-09-24 10:00:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Fazle",
-      destination: "USB",
-      source: "C:\\",
-      time: "2024-09-24 10:00:00",
+      time: "2024-09-23 07:15:00",
     },
     {
       id: "728ed52f",
@@ -128,9 +117,9 @@ function getData() {
       dataClass: "Personal",
       file: "file.txt",
       user: "Alahi",
-      destination: "USB",
+      destination: "Web",
       source: "C:\\",
-      time: "2024-09-24 10:00:00",
+      time: "2024-09-22 09:10:00",
     },
     {
       id: "728ed52f",
@@ -138,10 +127,21 @@ function getData() {
       action: "block",
       dataClass: "Personal",
       file: "file.txt",
-      user: "Fazle",
+      user: "Alahi",
       destination: "USB",
       source: "C:\\",
-      time: "2024-09-20 10:00:00",
+      time: "2024-09-24 12:18:00",
+    },
+    {
+      id: "728ed52f",
+      risk: "high",
+      action: "block",
+      dataClass: "Personal",
+      file: "file.txt",
+      user: "Foisal",
+      destination: "USB",
+      source: "C:\\",
+      time: "2024-09-20 13:15:00",
     },
     {
       id: "728ed52f",
@@ -152,7 +152,7 @@ function getData() {
       user: "Alahi",
       destination: "USB",
       source: "C:\\",
-      time: "2024-09-20 10:00:00",
+      time: "2024-09-20 15:20:00",
     },
     {
       id: "728ed52f",
@@ -160,10 +160,10 @@ function getData() {
       action: "block",
       dataClass: "Personal",
       file: "file.txt",
-      user: "Fazle",
-      destination: "USB",
+      user: "Karim",
+      destination: "Web",
       source: "C:\\",
-      time: "2024-09-20 10:00:00",
+      time: "2024-09-18 16:15:00",
     },
     {
       id: "728ed52f",
@@ -172,20 +172,9 @@ function getData() {
       dataClass: "Personal",
       file: "file.txt",
       user: "Alahi",
-      destination: "USB",
+      destination: "Web",
       source: "C:\\",
-      time: "2024-09-24 10:00:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Fazle",
-      destination: "USB",
-      source: "C:\\",
-      time: "2024-09-24 10:00:00",
+      time: "2024-09-22 05:20:00",
     },
     {
       id: "728ed52f",
@@ -194,9 +183,9 @@ function getData() {
       dataClass: "Personal",
       file: "file.txt",
       user: "Alahi",
-      destination: "USB",
+      destination: "Onedrive",
       source: "C:\\",
-      time: "2024-09-24 10:00:00",
+      time: "2024-09-23 16:20:00",
     },
     {
       id: "728ed52f",
@@ -204,10 +193,21 @@ function getData() {
       action: "block",
       dataClass: "Personal",
       file: "file.txt",
-      user: "Fazle",
+      user: "Karim",
       destination: "USB",
       source: "C:\\",
-      time: "2024-09-24 10:00:00",
+      time: "2024-09-23 19:30:00",
+    },
+    {
+      id: "728ed52f",
+      risk: "high",
+      action: "block",
+      dataClass: "Personal",
+      file: "file.txt",
+      user: "Sayeed",
+      destination: "Web",
+      source: "C:\\",
+      time: "2024-09-24 19:50:00",
     },
     {
       id: "728ed52f",
@@ -216,9 +216,9 @@ function getData() {
       dataClass: "Personal",
       file: "file.txt",
       user: "Alahi",
-      destination: "USB",
+      destination: "Web",
       source: "C:\\",
-      time: "2024-09-24 10:00:00",
+      time: "2024-09-21 12:30:00",
     },
     {
       id: "728ed52f",
@@ -226,10 +226,10 @@ function getData() {
       action: "block",
       dataClass: "Personal",
       file: "file.txt",
-      user: "Fazle",
-      destination: "USB",
+      user: "Alahi",
+      destination: "Email",
       source: "C:\\",
-      time: "2024-09-24 10:00:00",
+      time: "2024-09-23 18:30:00",
     },
   ];
 }
@@ -302,7 +302,7 @@ export default function Dashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent className="ml-5">
-            <span className="text-2xl font-bold text-red-500">85</span> of 94
+            <span className="text-2xl font-bold text-red-500">16</span> of 18
             total
           </CardContent>
           <CardFooter className="ml-5 flex justify-between text-gray-400">
@@ -317,7 +317,7 @@ export default function Dashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent className="ml-5">
-            <span className="text-2xl font-bold text-red-500">3</span> of 9
+            <span className="text-2xl font-bold text-red-500">5</span> of 7
             total
           </CardContent>
           <CardFooter className="ml-5 flex justify-between text-gray-400">
