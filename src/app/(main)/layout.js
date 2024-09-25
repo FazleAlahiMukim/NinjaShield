@@ -23,8 +23,10 @@ export default function MainLayout({ children }) {
 
   return (
     <div className="flex">
-      <NavBar />
-      <div className="flex-grow">
+      <div className="fixed left-0 top-0 h-full">
+        <NavBar />
+      </div>
+      <div className="ml-[240px] flex-grow">
         <TopBar />
         <div className="bg-customGray">{children}</div>
       </div>

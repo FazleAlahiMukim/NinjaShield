@@ -15,8 +15,8 @@ import Delete from "@/components/Delete";
 import { useUser } from "@/context/UserContext";
 import { useAuth } from "@/lib/authApi";
 import Policy from "./Policy";
-import Risk from "./Risk";
-import Action from "./Action";
+import Risk from "@/components/Risk";
+import Action from "@/components/Action";
 
 export default function Page() {
   const { user } = useUser();

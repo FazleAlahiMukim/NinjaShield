@@ -22,8 +22,8 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useAuth } from "@/lib/authApi";
 import { toast } from "sonner";
-import Risk from "./Risk";
-import Action from "./Action";
+import Risk from "@/components/Risk";
+import Action from "@/components/Action";
 import DropDownSelect from "./DropDownSelect";
 
 export default function Policy({
