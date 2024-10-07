@@ -20,62 +20,49 @@ export default function Devices() {
   const { user } = useUser();
   const { api } = useAuth();
 
-  const fetchDevices = async () => {
+  const fetchData = async () => {
     try {
-      const response = await api.get(`/api/device?userId=${user.userId}`);
-      setDevices(response.data);
+      const deviceResponse = await api.get(`/api/device?userId=${user.userId}`);
+      setDevices(deviceResponse.data);
+      const eventResponse = await api.get(`/api/event?userId=${user.userId}`);
+      setEvents(eventResponse.data);
     } catch (error) {
-      console.error("Devices Fetch error:", error);
-    }
-  };
-
-  const fetchEvents = async () => {
-    try {
-      const response = await api.get(`/api/event?userId=${user.userId}`);
-      setEvents(response.data);
-    } catch (error) {
-      console.error("Events Fetch error:", error);
+      console.error("Fetch error:", error);
     }
   };
 
   useEffect(() => {
-    fetchDevices();
+    fetchData();
   }, []);
 
   useEffect(() => {
-    fetchEvents();
-  }, [devices]);
+    if (!(events.length > 0 && devices.length > 0)) return;
 
-  useEffect(() => {
-    if (!(events.length > 0)) return;
-
-    setDevices((prevDevices) =>
-      prevDevices.map((device) => {
-        //only get last 7 days events
-        const deviceEvents = events.filter(
-          (event) =>
-            event.deviceId === device.deviceId &&
-            dayjs(event.time).isAfter(dayjs().subtract(7, "day")),
-        );
-        let lastUpdate = deviceEvents.length > 0 ? deviceEvents[0].time : "N/A";
-        if (lastUpdate != "N/A") {
-          lastUpdate = new Date(lastUpdate).toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            hour12: false,
-          });
-        }
-        return {
-          ...device,
-          events: deviceEvents.length,
-          lastUpdate,
-        };
-      }),
-    );
+    const updatedDevices = devices.map((device) => {
+      const deviceEvents = events.filter(
+        (event) =>
+          event.deviceId === device.deviceId &&
+          dayjs(event.time).isAfter(dayjs().subtract(7, "day")),
+      );
+      let lastUpdate = deviceEvents.length > 0 ? deviceEvents[0].time : "N/A";
+      if (lastUpdate != "N/A") {
+        lastUpdate = new Date(lastUpdate).toLocaleString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+        });
+      }
+      return {
+        ...device,
+        events: deviceEvents.length,
+        lastUpdate,
+      };
+    });
+    setDevices(updatedDevices);
   }, [events]);
 
   return (
