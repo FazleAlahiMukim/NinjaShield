@@ -23,30 +23,26 @@ export const columns = [
     },
   },
   {
-    accessorKey: "dataClass",
+    accessorKey: "dataClassName",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Data Classification" />
     ),
   },
   {
-    accessorKey: "file",
+    accessorKey: "fileName",
     header: "File",
   },
   {
-    accessorKey: "user",
+    accessorKey: "deviceName",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="User" />
     ),
   },
   {
-    accessorKey: "destination",
+    accessorKey: "destinationType",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Destination" />
     ),
-  },
-  {
-    accessorKey: "source",
-    header: "Source",
   },
   {
     accessorKey: "time",

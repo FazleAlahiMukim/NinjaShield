@@ -1,216 +1,39 @@
+"use client";
+import { useState, useEffect } from "react";
 import { columns } from "./columns";
 import { DataTable } from "./table";
+import { useUser } from "@/context/UserContext";
+import { useAuth } from "@/lib/authApi";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import { Button } from "@/components/ui/button";
 
-async function getData() {
-  return [
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Alahi",
-      destination: "USB",
-      source: "C:\\",
-      time: "2021-07-21 10:00:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "low",
-      action: "warn",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Fazle",
-      destination: "USB",
-      source: "C:\\",
-      time: "2021-07-21 10:00:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "medium",
-      action: "log",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Alahi",
-      destination: "USB",
-      source: "C:\\",
-      time: "2021-07-21 10:00:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Fazle",
-      destination: "USB",
-      source: "C:\\",
-      time: "2021-07-21 10:00:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Alahi",
-      destination: "USB",
-      source: "C:\\",
-      time: "2021-07-21 10:00:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Fazle",
-      destination: "USB",
-      source: "C:\\",
-      time: "2021-07-21 10:00:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Alahi",
-      destination: "USB",
-      source: "C:\\",
-      time: "2021-07-21 10:00:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Fazle",
-      destination: "USB",
-      source: "C:\\",
-      time: "2021-07-21 10:00:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Alahi",
-      destination: "USB",
-      source: "C:\\",
-      time: "2021-07-21 10:00:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Fazle",
-      destination: "USB",
-      source: "C:\\",
-      time: "2021-07-21 10:00:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Alahi",
-      destination: "USB",
-      source: "C:\\",
-      time: "2021-07-21 10:00:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Fazle",
-      destination: "USB",
-      source: "C:\\",
-      time: "2021-07-21 10:00:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Alahi",
-      destination: "USB",
-      source: "C:\\",
-      time: "2021-07-21 10:00:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Fazle",
-      destination: "USB",
-      source: "C:\\",
-      time: "2021-07-21 10:00:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Alahi",
-      destination: "USB",
-      source: "C:\\",
-      time: "2021-07-21 10:00:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Fazle",
-      destination: "USB",
-      source: "C:\\",
-      time: "2021-07-21 10:00:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Alahi",
-      destination: "USB",
-      source: "C:\\",
-      time: "2021-07-21 10:00:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Fazle",
-      destination: "USB",
-      source: "C:\\",
-      time: "2021-07-21 10:00:00",
-    },
-  ];
-}
+export default function Page() {
+  const [events, setEvents] = useState([]);
+  const { user } = useUser();
+  const { api } = useAuth();
 
-export default async function Page() {
-  const data = await getData();
+  const fetchEvents = async () => {
+    try {
+      const response = await api.get(`/api/event?userId=${user.userId}`);
+      setEvents(response.data);
+    } catch (error) {
+      console.error("Events Fetch error:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
   return (
     <div className="relative top-4 mx-10 mb-10 rounded-3xl bg-white p-4 pt-5 shadow-2xl">
-      <h1 className="relative left-5 text-xl font-bold">Events Overview</h1>
-      <DataTable columns={columns} data={data} />
+      <div className="flex flex-row items-center">
+        <h1 className="relative left-5 text-xl font-bold">Events Overview</h1>
+        <button className="relative left-10" onClick={fetchEvents}>
+          <ArrowPathIcon className="h-5 w-5 transform text-gray-400 transition-transform duration-300 hover:scale-125"></ArrowPathIcon>
+        </button>
+      </div>
+      <DataTable columns={columns} data={events} />
     </div>
   );
 }

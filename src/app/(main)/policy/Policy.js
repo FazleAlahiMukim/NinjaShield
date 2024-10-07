@@ -59,7 +59,7 @@ export default function Policy({
     if (policy) {
       initializePolicy();
     }
-  }, [policy]);
+  }, []);
 
   const handleSavePolicy = async () => {
     const refactoredDataClasses = allDataClasses

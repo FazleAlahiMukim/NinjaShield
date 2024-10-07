@@ -62,9 +62,9 @@ export function DataTable({ columns, data }) {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter users..."
-          value={table.getColumn("user")?.getFilterValue() ?? ""}
+          value={table.getColumn("deviceName")?.getFilterValue() ?? ""}
           onChange={(event) =>
-            table.getColumn("user")?.setFilterValue(event.target.value)
+            table.getColumn("deviceName")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -137,8 +137,41 @@ export function DataTable({ columns, data }) {
                   {expandedRows[row.id] && (
                     <TableRow>
                       <TableCell colSpan={columns.length}>
-                        <div className="bg-gray-100 p-4">
-                          <p>Expanded content for row {row.id}</p>
+                        <div className="flex flex-row justify-evenly bg-gray-100 p-4">
+                          <div className="grid w-auto grid-cols-[100px_1fr]">
+                            <span>
+                              <strong>Policy</strong>
+                            </span>
+                            <span>{row.original.policyName}</span>
+
+                            <span>
+                              <strong>Rule</strong>
+                            </span>
+                            <span>{row.original.ruleName}</span>
+
+                            <span>
+                              <strong>Occurrence</strong>
+                            </span>
+                            <span>{row.original.occurrences}</span>
+                          </div>
+                          <div className="grid w-auto grid-cols-[100px_1fr]">
+                            {row.original.source && (
+                              <>
+                                <span>
+                                  <strong> Source </strong>
+                                </span>
+                                <span>{row.original.source}</span>
+                              </>
+                            )}
+                            {row.original.destination && (
+                              <>
+                                <span>
+                                  <strong> Destination </strong>
+                                </span>
+                                <span>{row.original.destination}</span>
+                              </>
+                            )}
+                          </div>
                         </div>
                       </TableCell>
                     </TableRow>
