@@ -59,7 +59,7 @@ export default function Element({ onElementChange, element }) {
               key={index}
               className="m-1 flex items-center rounded-full bg-gray-200 px-2 py-1 text-gray-800"
             >
-              <span className="mr-2">{tag}</span>
+              <span className="mr-2 break-all">{tag}</span>
               <button
                 onClick={() => removeTag(index)}
                 className="focus:outline-none"
