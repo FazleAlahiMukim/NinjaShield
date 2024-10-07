@@ -25,6 +25,7 @@ import { toast } from "sonner";
 import Risk from "@/components/Risk";
 import Action from "@/components/Action";
 import DropDownSelect from "./DropDownSelect";
+import { all } from "axios";
 
 export default function Policy({
   policy,
@@ -47,19 +48,20 @@ export default function Policy({
     setRisk(policy.risk);
     setAction(policy.action);
     setFileCategories(policy.fileCategories);
-    setDataClasses(
-      allDataClasses
-        .filter((dataClass) => policy.dataClasses.includes(dataClass.dataId))
-        .map((dataClass) => dataClass.name),
-    );
+    const tempDataClasses = allDataClasses.filter((dataClass) =>
+      policy.dataClasses
+        .includes(dataClass.dataId))
+        .map((dataClass) => dataClass.name);
+    setDataClasses(tempDataClasses);
     setDestinations(policy.destinations);
   };
 
   useEffect(() => {
-    if (policy) {
+    console.log(allDataClasses);
+    if (policy && allDataClasses.length > 0) {
       initializePolicy();
     }
-  }, []);
+  }, [policy, allDataClasses]);
 
   const handleSavePolicy = async () => {
     const refactoredDataClasses = allDataClasses
@@ -146,11 +148,15 @@ export default function Policy({
                 value={risk}
                 defaultValue="high"
                 onValueChange={(value) => setRisk(value)}
-                className="-mt-2 flex justify-center space-x-10"
+                className="flex justify-center space-x-10"
               >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="high" id="high" />
                   <Risk risk="high" />
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="medium" id="medium" />
+                  <Risk risk="medium" />
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="low" id="low" />
