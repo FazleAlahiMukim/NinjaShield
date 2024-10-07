@@ -25,11 +25,11 @@ const navLinks = [
     icon: LockClosedIcon,
     href: "/data-security",
   },
-  // {
-  //   name: "User Behaviour",
-  //   icon: UserIcon,
-  //   href: "/user-behaviour",
-  // },
+  {
+    name: "User Behaviour",
+    icon: UserIcon,
+    href: "/user-behaviour",
+  },
   {
     type: "Manage",
   },
