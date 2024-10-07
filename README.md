@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# NinjaShield Frontend
+
+NinjaShield is a Data Leak Prevention (DLP) tool that helps organizations prevent the leakage of sensitive data through various channels such as file uploads, emails, and clipboard operations. This repository contains the frontend for NinjaShield, which provides an interactive dashboard and various features for managing policies, monitoring data classification, and more.
+
+## Contributors
+
+- [@fazle]([https://github.com/fazle](https://github.com/FazleAlahiMukim))
+- [@tonmoy]([https://github.com/tonmoy](https://github.com/TonmoyDaFulkopi))
+
+## 2 separate Back-ends
+[@adminbacckend](https://github.com/FazleAlahiMukim/NinjaShield-AdminBackend) for the web-based application & [@devicebackend](https://github.com/FazleAlahiMukim/NinjaShield-Backend) for the Local Machine used by Employees
+
+## Features
+
+### Dashboard
+- A comprehensive **Dashboard** to view system status and manage data policies.
+- Provides an overview of active policies, monitored devices, and file events in real-time.
+- Includes statistical charts and logs to track activity and ensure compliance.
+
+### Data Classification
+- **Data Classification** helps categorize different types of data (e.g., text files, images, audio) and apply rules based on sensitive data.
+- Allows administrators to create and manage Data Classes, each associated with a set of rules and file categories.
+- Integrates with backend policies to automatically scan files and block or allow actions based on the content.
+
+### Device Management
+- Manage devices connected to the DLP system through a dedicated **Device Management** interface.
+- View device details, monitor activities, and assign policies to different devices.
+- Ensure security compliance by enforcing data protection policies on each registered device.
+
+### Policy Management
+- **Policy Management** allows administrators to define and enforce rules for data classification.
+- Policies can include blocking, logging, or warning actions based on file contents or destination types.
+- Policies are applied to specific devices, data classes, and file categories, offering granular control over data protection.
+
+### Service Status Monitoring
+- **Service Monitoring** to check the status of different services running on devices.
+- Periodically refreshes to show the current state of services, whether they are active or require intervention.
+- Integration with backend services to update the status and trigger notifications if needed.
+
+### Browser Cookie for Security
+- Uses **browser cookies** for secure user authentication and session management.
+- Ensures that all user interactions with the NinjaShield dashboard are secure and protected.
+
+### File Monitoring
+- **File Upload Monitoring** detects sensitive content in files uploaded through the browser.
+- 
+### Real-time Updates
+- The dashboard and all features receive real-time updates from the backend, ensuring that policies and services are always current.
+- Automatic refreshing and user notifications when updates occur.
+
+## Technologies Used
+- **Next.js** for server-side rendering and fast, modern web development.
+- **React** for building dynamic, reusable components.
+- **MongoDB** as the backend database for storing policies and user data.
+- **Spring Boot** to manage backend services and handle real-time updates.
+- **Browser Cookies** for security and session management.
 
 ## Getting Started
 
-First, run the development server:
+To get started with the NinjaShield Frontend, follow these steps:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Prerequisites
+- Node.js and npm installed on your system.
+- MongoDB and Spring Boot backend running.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
