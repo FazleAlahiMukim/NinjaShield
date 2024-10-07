@@ -17,6 +17,7 @@ import { useAuth } from "@/lib/authApi";
 import Policy from "./Policy";
 import Risk from "@/components/Risk";
 import Action from "@/components/Action";
+import Bot from "./Bot";
 
 export default function Page() {
   const { user } = useUser();
@@ -57,7 +58,7 @@ export default function Page() {
 
   const fetchDataClasses = async () => {
     try {
-      const response = await api.get(`/api/data-class?userId=${user.userId}`);
+      const response = await api.get(`/api/data-class/actives?userId=${user.userId}`);
       setDataClasses(response.data);
     } catch (error) {
       console.error("Data Classes Fetch error:", error);
@@ -113,12 +114,15 @@ export default function Page() {
       <Toaster richColors closeButton />
       <div className="flex flex-row justify-between">
         <h1 className="relative left-5 text-xl font-bold">Policy</h1>
-        <Policy
-          onSave={handleAddPolicy}
-          allDestinations={allDestinations}
-          allFileCategories={allFileCategories}
-          allDataClasses={allDataClasses}
-        />
+        <div className="flex flex-row space-x-10">
+          <Bot onSave={handleAddPolicy} />
+          <Policy
+            onSave={handleAddPolicy}
+            allDestinations={allDestinations}
+            allFileCategories={allFileCategories}
+            allDataClasses={allDataClasses}
+          />
+        </div>
       </div>
       <div className="max-h-[calc(100vh-200px)] overflow-auto">
         <Table>
