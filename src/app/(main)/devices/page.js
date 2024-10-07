@@ -1,70 +1,86 @@
+"use client";
+import { useState, useEffect } from "react";
+import { useUser } from "@/context/UserContext";
+import { useAuth } from "@/lib/authApi";
+import dayjs from "dayjs";
 import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import Request from "./Request";
 
 export default function Devices() {
-  const devices = [
-    {
-      deviceId: "1",
-      name: "Alahi",
-      status: "Active",
-      events: "10",
-      lastUpdate: "2021-09-24 10:00:00",
-    },
-    {
-      deviceId: "2",
-      name: "Mijan",
-      status: "Active",
-      events: "5",
-      lastUpdate: "2021-09-24 10:00:00",
-    },
-    {
-      deviceId: "3",
-      name: "Sayeed",
-      status: "Active",
-      events: "15",
-      lastUpdate: "2021-09-24 10:00:00",
-    },
-    {
-      deviceId: "4",
-      name: "Junayed",
-      status: "Active",
-      events: "3",
-      lastUpdate: "2021-09-24 10:00:00",
-    },
-    {
-      deviceId: "5",
-      name: "Karim",
-      status: "Active",
-      events: "20",
-      lastUpdate: "2021-09-24 10:00:00",
-    },
-    {
-      deviceId: "6",
-      name: "Tonmoy",
-      status: "Inactive",
-      events: "1",
-      lastUpdate: "2021-09-24 10:00:00",
-    },
-    {
-      deviceId: "7",
-      name: "Foisal",
-      status: "Active",
-      events: "8",
-      lastUpdate: "2021-09-24 10:00:00",
-    },
-  ];
+  const [devices, setDevices] = useState([]);
+  const [events, setEvents] = useState([]);
+  const { user } = useUser();
+  const { api } = useAuth();
+
+  const fetchDevices = async () => {
+    try {
+      const response = await api.get(`/api/device?userId=${user.userId}`);
+      setDevices(response.data);
+    } catch (error) {
+      console.error("Devices Fetch error:", error);
+    }
+  };
+
+  const fetchEvents = async () => {
+    try {
+      const response = await api.get(`/api/event?userId=${user.userId}`);
+      setEvents(response.data);
+    } catch (error) {
+      console.error("Events Fetch error:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDevices();
+  }, []);
+
+  useEffect(() => {
+    fetchEvents();
+  }, [devices]);
+
+  useEffect(() => {
+    if (!(events.length > 0)) return;
+
+    setDevices((prevDevices) =>
+      prevDevices.map((device) => {
+        //only get last 7 days events
+        const deviceEvents = events.filter(
+          (event) =>
+            event.deviceId === device.deviceId &&
+            dayjs(event.time).isAfter(dayjs().subtract(7, "day")),
+        );
+        let lastUpdate = deviceEvents.length > 0 ? deviceEvents[0].time : "N/A";
+        if (lastUpdate != "N/A") {
+          lastUpdate = new Date(lastUpdate).toLocaleString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false,
+          });
+        }
+        return {
+          ...device,
+          events: deviceEvents.length,
+          lastUpdate,
+        };
+      }),
+    );
+  }, [events]);
 
   return (
     <div className="relative top-4 mx-10 mb-10 rounded-3xl bg-white p-4 pt-5 shadow-2xl">
-      <div className="relative left-5 text-xl font-bold">Devices</div>
+      <div className="relative left-5 text-xl font-bold">Devices Overview</div>
       <div>
         <Table>
           <TableHeader>
@@ -80,10 +96,14 @@ export default function Devices() {
               <TableRow key={device.deviceId}>
                 <TableCell>{device.name}</TableCell>
                 <TableCell>
-                  {device.status === "Active" ? (
-                    <Badge>{device.status}</Badge>
+                  {device.status === "active" ? (
+                    <Badge className="capitalize">{device.status}</Badge>
+                  ) : device.status === "inactive" ? (
+                    <Badge variant="outline" className="capitalize">
+                      {device.status}
+                    </Badge>
                   ) : (
-                    <Badge variant="outline">{device.status}</Badge>
+                    <Request device={device} />
                   )}
                 </TableCell>
                 <TableCell className="text-right">{device.events}</TableCell>
