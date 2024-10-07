@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useUser } from "@/context/UserContext";
+import { useAuth } from "@/lib/authApi";
 import {
   BarChart,
   Bar,
@@ -15,7 +16,6 @@ import dayjs from "dayjs";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -24,262 +24,143 @@ import { LockClosedIcon, UsersIcon } from "@heroicons/react/24/solid";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-function getData() {
-  return [
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Alahi",
-      destination: "Email",
-      source: "C:\\",
-      time: "2024-09-24 10:23:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "low",
-      action: "warn",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Mijan",
-      destination: "USB",
-      source: "C:\\",
-      time: "2024-09-23 11:56:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "medium",
-      action: "log",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Sayeed",
-      destination: "Email",
-      source: "C:\\",
-      time: "2024-09-22 16:34:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "low",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Junayed",
-      destination: "Email",
-      source: "C:\\",
-      time: "2024-09-21 14:18:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "medium",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Foisal",
-      destination: "USB",
-      source: "C:\\",
-      time: "2024-09-23 23:12:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Karim",
-      destination: "USB",
-      source: "C:\\",
-      time: "2024-09-22 06:30:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Junayed",
-      destination: "Web",
-      source: "C:\\",
-      time: "2024-09-23 07:15:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Alahi",
-      destination: "Web",
-      source: "C:\\",
-      time: "2024-09-22 09:10:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Alahi",
-      destination: "USB",
-      source: "C:\\",
-      time: "2024-09-24 12:18:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Foisal",
-      destination: "USB",
-      source: "C:\\",
-      time: "2024-09-20 13:15:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "low",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Alahi",
-      destination: "USB",
-      source: "C:\\",
-      time: "2024-09-20 15:20:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "low",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Karim",
-      destination: "Web",
-      source: "C:\\",
-      time: "2024-09-18 16:15:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Alahi",
-      destination: "Web",
-      source: "C:\\",
-      time: "2024-09-22 05:20:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Alahi",
-      destination: "Onedrive",
-      source: "C:\\",
-      time: "2024-09-23 16:20:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Karim",
-      destination: "USB",
-      source: "C:\\",
-      time: "2024-09-23 19:30:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Sayeed",
-      destination: "Web",
-      source: "C:\\",
-      time: "2024-09-24 19:50:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Alahi",
-      destination: "Web",
-      source: "C:\\",
-      time: "2024-09-21 12:30:00",
-    },
-    {
-      id: "728ed52f",
-      risk: "high",
-      action: "block",
-      dataClass: "Personal",
-      file: "file.txt",
-      user: "Alahi",
-      destination: "Email",
-      source: "C:\\",
-      time: "2024-09-23 18:30:00",
-    },
-  ];
-}
-
-const getLast30Days = () => {
-  const last30Days = [];
-  for (let i = 0; i < 30; i++) {
-    last30Days.push(dayjs().subtract(i, "day").format("YYYY-MM-DD"));
-  }
-  return last30Days.reverse();
-};
-
-const processData = (data) => {
-  const last30Days = getLast30Days();
-
-  const processedData = last30Days.map((date) => ({
-    date,
-    high: 0,
-    medium: 0,
-    low: 0,
-  }));
-
-  data.forEach((item) => {
-    const itemDate = dayjs(item.time).format("YYYY-MM-DD");
-    const risk = item.risk.toLowerCase();
-
-    const dateEntry = processedData.find((entry) => entry.date === itemDate);
-
-    if (dateEntry) {
-      dateEntry[risk] += 1;
-    }
-  });
-
-  return processedData;
-};
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 export default function Dashboard() {
-  const { user } = useUser();
+  const [allEvents, setAllEvents] = useState([]);
+  const [events, setEvents] = useState([]);
   const [chartData, setChartData] = useState([]);
+  const [numberOfHighRiskEvents, setNumberOfHighRiskEvents] = useState(0);
+  const [numberofHighRiskUsers, setNumberOfHighRiskUsers] = useState(0);
   const [days, setDays] = useState("Last 30 days");
+  const { user } = useUser();
+  const { api } = useAuth();
+
+  const getLast30Days = () => {
+    const last30Days = [];
+    for (let i = 0; i < 30; i++) {
+      last30Days.push(dayjs().subtract(i, "day").format("YYYY-MM-DD"));
+    }
+    return last30Days.reverse();
+  };
+
+  const getLast7Days = () => {
+    const last7Days = [];
+    for (let i = 0; i < 7; i++) {
+      last7Days.push(dayjs().subtract(i, "day").format("YYYY-MM-DD"));
+    }
+    return last7Days.reverse();
+  };
+
+  const getAllDays = () => {
+    const allDays = [];
+    const oldestDate = events[events.length - 1].time;
+    const newestDate = events[0].time;
+    const days = dayjs(newestDate).diff(oldestDate, "day");
+
+    for (let i = 0; i < days; i++) {
+      allDays.push(dayjs(oldestDate).add(i, "day").format("YYYY-MM-DD"));
+    }
+
+    return allDays;
+  };
+
+  const processData = (data) => {
+    let chartDays = [];
+
+    if (days === "Last 30 days") {
+      chartDays = getLast30Days();
+    } else if (days === "Last 7 days") {
+      chartDays = getLast7Days();
+    } else {
+      chartDays = getAllDays();
+    }
+
+    const processedData = chartDays.map((date) => ({
+      date,
+      high: 0,
+      medium: 0,
+      low: 0,
+    }));
+
+    data.forEach((item) => {
+      const itemDate = dayjs(item.time).format("YYYY-MM-DD");
+      const risk = item.risk.toLowerCase();
+
+      const dateEntry = processedData.find((entry) => entry.date === itemDate);
+
+      if (dateEntry) {
+        dateEntry[risk] += 1;
+      }
+    });
+
+    return processedData;
+  };
+
+  const fetchEvents = async () => {
+    try {
+      const response = await api.get(`/api/event?userId=${user.userId}`);
+      setAllEvents(response.data);
+    } catch (error) {
+      console.error("Events Fetch error:", error);
+    }
+  };
+
+  const countHighRiskEvents = () => {
+    setNumberOfHighRiskEvents(
+      events.filter((event) => event.risk === "high").length,
+    );
+  };
+
+  const countHighRiskUsers = () => {
+    const highRiskDeviceNames = new Set(
+      events
+        .filter((event) => event.risk === "high")
+        .map((event) => event.deviceName),
+    );
+    setNumberOfHighRiskUsers(highRiskDeviceNames.size);
+  };
 
   useEffect(() => {
-    const data = getData();
-    setChartData(processData(data));
+    fetchEvents();
   }, []);
 
+  useEffect(() => {
+    if (!(allEvents.length > 0)) return;
+
+    if (days === "Last 30 days") {
+      setEvents(
+        allEvents.filter((event) =>
+          dayjs(event.time).isAfter(dayjs().subtract(30, "day")),
+        ),
+      );
+    } else if (days === "Last 7 days") {
+      setEvents(
+        allEvents.filter((event) =>
+          dayjs(event.time).isAfter(dayjs().subtract(7, "day")),
+        ),
+      );
+    } else {
+      setEvents(allEvents);
+    }
+  }, [days, allEvents]);
+
+  useEffect(() => {
+    if (events.length > 0) {
+      countHighRiskEvents();
+      countHighRiskUsers();
+      setChartData(processData(events));
+    }
+  }, [events]);
+
   return (
-    <div className="relative top-4 mx-10 mb-10 p-4 pt-5">
-      <div className="flex flex-row justify-between rounded-lg bg-white p-3">
-        <div className="relative left-5 text-xl font-bold">Dashboard</div>
+    <div className="relative top-4 mx-10 mb-10 rounded-3xl">
+      <div className="flex flex-row justify-between rounded-3xl bg-white p-4 pt-5">
+        <h1 className="relative left-5 text-xl font-bold">Dashboard</h1>
         <div>
           <Select value={days} onValueChange={(value) => setDays(value)}>
             <SelectTrigger className="w-[180px]">
@@ -302,8 +183,10 @@ export default function Dashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent className="ml-5">
-            <span className="text-2xl font-bold text-red-500">16</span> of 18
-            total
+            <span className="text-2xl font-bold text-red-500">
+              {numberOfHighRiskEvents}
+            </span>{" "}
+            of {events.length} total
           </CardContent>
           <CardFooter className="ml-5 flex justify-between text-gray-400">
             {days}
@@ -317,8 +200,10 @@ export default function Dashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent className="ml-5">
-            <span className="text-2xl font-bold text-red-500">5</span> of 7
-            total
+            <span className="text-2xl font-bold text-red-500">
+              {numberofHighRiskUsers}
+            </span>{" "}
+            of 7 total
           </CardContent>
           <CardFooter className="ml-5 flex justify-between text-gray-400">
             {days}
@@ -326,21 +211,26 @@ export default function Dashboard() {
         </Card>
       </div>
       <div className="mt-5 bg-white">
-        <ResponsiveContainer width="100%" height={350}>
-          <BarChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="date"
-              tickFormatter={(date) => dayjs(date).format("D MMM")}
-            />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="high" fill="#ff4d4d" name="High" />
-            <Bar dataKey="medium" fill="#ffa500" name="Medium" />
-            <Bar dataKey="low" fill="#82ca9d" name="Low" />
-          </BarChart>
-        </ResponsiveContainer>
+        <ScrollArea usage="chart" className="overflow-x-auto rounded-md border" style={{ width: 'calc(100vw - 340px)'}}>
+          <div style={(days === "All time" && chartData.length > 30) ? { width: `${chartData.length * 20}px`, height: "350px" } : { height: "350px" }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="date"
+                  tickFormatter={(date) => dayjs(date).format("D MMM")}
+                />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="high" fill="#ff4d4d" name="High" />
+                <Bar dataKey="medium" fill="#ffa500" name="Medium" />
+                <Bar dataKey="low" fill="#82ca9d" name="Low" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </div>
     </div>
   );
